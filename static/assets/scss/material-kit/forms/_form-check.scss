@@ -1,91 +1,152 @@
-.form-check:not(.form-switch) .form-check-input {
-  float: initial !important;
-  margin-left: auto !important;
+//
+// Check/radio
+//
 
-  &[type="checkbox"],
-  &[type="radio"] {
-    border: 1px solid darken($gray-200, 10%);
-    margin-top: $form-text-margin-top;
-    position: relative;
+.form-check {
+  display: block;
+  min-height: $form-check-min-height;
+  padding-left: $form-check-padding-start;
+  margin-bottom: $form-check-margin-bottom;
 
-    &:checked {
-      border-color: $primary;
-    }
+  .form-check-input {
+    float: left;
+    margin-left: $form-check-padding-start * -1;
   }
+}
+
+.form-check-input {
+  width: $form-check-input-width;
+  height: $form-check-input-width;
+  margin-top: ($line-height-base - $form-check-input-width) * .5; // line-height minus check height
+  vertical-align: top;
+  background-color: $form-check-input-bg;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: $form-check-input-border;
+  appearance: none;
+  color-adjust: exact; // Keep themed appearance for print
+  @include transition($form-check-transition);
 
   &[type="checkbox"] {
-    background-image: none;
-    &:after {
-      transition: opacity $form-check-transition-time ease-in-out;
-      font-family: "FontAwesome";
-      content: "\f00c";
-      width: 100%;
-      height: 100%;
-      color: $form-check-input-checked-color;
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: $font-size-sm - .205;
-      opacity: 0;
+    @include border-radius($form-check-input-border-radius);
+  }
+
+  &[type="radio"] {
+    // stylelint-disable-next-line property-disallowed-list
+    border-radius: $form-check-radio-border-radius;
+  }
+
+  &:active {
+    filter: $form-check-input-active-filter;
+  }
+
+  &:focus {
+    border-color: $form-check-input-focus-border;
+    outline: 0;
+    box-shadow: $form-check-input-focus-box-shadow;
+  }
+
+  &:checked {
+    background-color: $form-check-input-checked-bg-color;
+    border-color: $form-check-input-checked-border-color;
+
+    &[type="checkbox"] {
+      @if $enable-gradients {
+        background-image: escape-svg($form-check-input-checked-bg-image), var(--#{$variable-prefix}gradient);
+      } @else {
+        background-image: escape-svg($form-check-input-checked-bg-image);
+      }
     }
 
-    &:checked{
-      background: $primary;
-      &:after {
-        opacity: 1;
+    &[type="radio"] {
+      @if $enable-gradients {
+        background-image: escape-svg($form-check-radio-checked-bg-image), var(--#{$variable-prefix}gradient);
+      } @else {
+        background-image: escape-svg($form-check-radio-checked-bg-image);
       }
     }
   }
 
-  &[type="radio"] {
-    transition: border 0s;
-    background: transparent;
+  &[type="checkbox"]:indeterminate {
+    background-color: $form-check-input-indeterminate-bg-color;
+    border-color: $form-check-input-indeterminate-border-color;
 
-    &:after {
-      transition: opacity $form-check-transition-time ease-in-out;
-      content: "";
-      position: absolute;
-      width: $form-check-radio-after-width;
-      height: $form-check-radio-after-width;
-      border-radius: 50%;
-      background-image: escape-svg($form-check-radio-checked-bg-image), var(--#{$variable-prefix}gradient);;
-      opacity: 0;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      margin: auto;
+    @if $enable-gradients {
+      background-image: escape-svg($form-check-input-indeterminate-bg-image), var(--#{$variable-prefix}gradient);
+    } @else {
+      background-image: escape-svg($form-check-input-indeterminate-bg-image);
     }
+  }
 
-    &:checked {
-      padding: 6px;
-    }
+  &:disabled {
+    pointer-events: none;
+    filter: none;
+    opacity: $form-check-input-disabled-opacity;
+  }
 
-    &:checked:after {
-      opacity: 1;
-    }
-
-    &:active{
-      box-shadow: $form-check-radio-after-shadow;
-      border-radius: $border-radius-pill;
-      transition: $form-check-radio-transition;
+  // Use disabled attribute in addition of :disabled pseudo-class
+  // See: https://github.com/twbs/bootstrap/issues/28247
+  &[disabled],
+  &:disabled {
+    ~ .form-check-label {
+      opacity: $form-check-label-disabled-opacity;
     }
   }
 }
 
-.form-check-label,
-.form-check-input[type="checkbox"] {
-  cursor: pointer;
+.form-check-label {
+  color: $form-check-label-color;
+  cursor: $form-check-label-cursor;
 }
 
-.form-check-label{
-  font-size:$font-size-sm;
-  font-weight: $font-weight-normal;
+//
+// Switch
+//
+
+.form-switch {
+  padding-left: $form-switch-padding-start;
+
+  .form-check-input {
+    width: $form-switch-width;
+    margin-left: $form-switch-padding-start * -1;
+    background-image: escape-svg($form-switch-bg-image);
+    background-position: left center;
+    @include border-radius($form-switch-border-radius);
+    @include transition($form-switch-transition);
+
+    &:focus {
+      background-image: escape-svg($form-switch-focus-bg-image);
+    }
+
+    &:checked {
+      background-position: $form-switch-checked-bg-position;
+
+      @if $enable-gradients {
+        background-image: escape-svg($form-switch-checked-bg-image), var(--#{$variable-prefix}gradient);
+      } @else {
+        background-image: escape-svg($form-switch-checked-bg-image);
+      }
+    }
+  }
 }
 
-.form-check-input{
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+.form-check-inline {
+  display: inline-block;
+  margin-right: $form-check-inline-margin-end;
+}
+
+.btn-check {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+
+  &[disabled],
+  &:disabled {
+    + .btn {
+      pointer-events: none;
+      filter: none;
+      opacity: $form-check-btn-check-disabled-opacity;
+    }
+  }
 }
